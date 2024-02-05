@@ -1,4 +1,4 @@
-use super::PhotoType;
+pub use super::FileType;
 
 /// Groups whether a photo has raw file, developed file or extra files linked to it.
 #[derive(Debug)]
@@ -152,6 +152,10 @@ impl PhotoFile {
         }
     }
 
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
     /// Delete one of the associated files to a photo instance.
     ///
     /// # Description
@@ -169,7 +173,7 @@ impl PhotoFile {
     ///
     /// let mut image = PhotoFile::new("myname", Some("dng"), Some("jpg"), None);
     /// image.hash_img(Some(true));
-    /// let result = image.clear(PhotoType::Img);
+    /// let result = image.clear(FileType::Img);
     /// match result {
     ///     Ok(..) => println!("The developed file associated to myname was deleted."),
     ///     Err(e) => println!(
@@ -177,13 +181,13 @@ impl PhotoFile {
     ///     ),
     /// }
     /// ```
-    pub fn clear(&mut self, image_type: PhotoType) -> std::io::Result<u32> {
+    pub fn clear(&mut self, image_type: FileType) -> std::io::Result<u32> {
         let mut filepath = self.name.clone();
 
         let (extra, exists) = match image_type {
-            PhotoType::Raw => (self.raw_ext.as_str(), self.types_found.hash_raw),
-            PhotoType::Img => (self.img_ext.as_str(), self.types_found.hash_img),
-            PhotoType::Other => (self.other_ext.as_str(), self.types_found.hash_other),
+            FileType::Raw => (self.raw_ext.as_str(), self.types_found.hash_raw),
+            FileType::Img => (self.img_ext.as_str(), self.types_found.hash_img),
+            FileType::Other => (self.other_ext.as_str(), self.types_found.hash_other),
         };
 
         filepath.push_str(extra);
@@ -195,11 +199,6 @@ impl PhotoFile {
             Ok(0)
         }
     }
-
-    // pub fn move(&mut self) -> std::io::Result<()> {
-
-    // }
-
 }
 
 #[cfg(test)]
