@@ -4,8 +4,8 @@ mod photo_file;
 
 pub use crate::photo_file::*;
 
-
-pub enum PhotoType {
+/// Enum that indicates whether a file is a raw photo, a developed photo or metadata.
+pub enum FileType {
     Raw,
     Img,
     Other,
